@@ -14,26 +14,40 @@ class NumbertoStringMain{
 	
 class Math4{
 	public static void numberValue(int a){
-		if(numberToWord(a/1000)) System.out.print(" thousand ");
-		if(numberToWord((a%1000)/100)) System.out.print(" hundred ");
+		if(a<0){
+			System.out.print("minus ");
+			a = -a;
+		}
+		thousandsToWord(a);	
+	
+	}
+	public static void thousandsToWord(int a){
+		if(a/1000>0 && a/1000000==0){
+			hundredsToWord(a/1000);
+			System.out.print(" thousand ");
+		}
+		hundredsToWord(a%1000);
+	}
+	public static void hundredsToWord(int a){
+		if((a/100)>0){
+			numberToWord((a/100));
+			System.out.print(" hundred ");
+		}
 		if(((a%1000)%100)>0) tensToWord(a);
 		if(a==0) System.out.print("zero");
 	}
-	private static boolean numberToWord(int a){
+	private static void numberToWord(int a){
 		switch(a){
-			case 0: return false;
-			case 1: System.out.print("one"); return true;
-			case 2: System.out.print("two"); return true;
-			case 3: System.out.print("three"); return true;
-			case 4: System.out.print("four"); return true;
-			case 5: System.out.print("five"); return true;
-			case 6: System.out.print("six"); return true;
-			case 7: System.out.print("seven"); return true;
-			case 8: System.out.print("eight"); return true;
-			case 9: System.out.print("nine"); return true;
+			case 1: System.out.print("one"); break;
+			case 2: System.out.print("two"); break;
+			case 3: System.out.print("three"); break;
+			case 4: System.out.print("four"); break;
+			case 5: System.out.print("five"); break;
+			case 6: System.out.print("six"); break;
+			case 7: System.out.print("seven"); break;
+			case 8: System.out.print("eight"); break;
+			case 9: System.out.print("nine"); break;
 		}
-		System.out.println("wtf");
-		return false;
 	}
 	private static void tensToWord(int A){
 		int a = (A%1000)%100;
