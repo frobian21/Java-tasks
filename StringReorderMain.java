@@ -22,7 +22,12 @@ class StringReorderMain{
 		}
 		for(,minlength<=maxlength; minlength++){
 			for(i = 0,j = 0;j<original.length()-minlength;j++){
-				
+				if(original.substring(j,j+1).equals(" ")){
+					if(j-i == minlength){
+						ordered = ordered + original.substring(i,j+1);
+					}
+					i = j+1;
+				}
 			}
 		}
 		return ordered;

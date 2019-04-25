@@ -80,13 +80,12 @@ class Calculator implements ActionListener{
 		x = y = r = 0;
 
 		Button B = (Button) X.getSource();
-		if(B == b1){
-			t1.setText(t1.getText()+"1");
-			}
+		if(B == b1){t1.setText(t1.getText()+"1");}
 		if(B == b2){t1.setText(t1.getText()+"2");}
 		if(B == b3){t1.setText(t1.getText()+"3");}
 		if(B == b4){t1.setText(t1.getText()+"4");}
-		if(B == b5){t1.setText(t1.getText()+"6");}
+		if(B == b5){t1.setText(t1.getText()+"5");}
+		if(B == b6){t1.setText(t1.getText()+"6");}
 		if(B == b7){t1.setText(t1.getText()+"7");}
 		if(B == b8){t1.setText(t1.getText()+"8");}
 		if(B == b9){t1.setText(t1.getText()+"9");}
