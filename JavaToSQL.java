@@ -48,26 +48,26 @@ class JavaToSQL implements ActionListener {
 //		if (bswitch.equals((Button) event.getSource())) {
 //			new RecordDisplay();
 //		} else {
-			try {
-				Connection con = DriverManager.getConnection("jdbc:mysql://localhost/school?allowMultipleQueries=true",
-						"root", "");
-				Statement st = con.createStatement();
+		try {
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost/school?allowMultipleQueries=true",
+					"root", "");
+			Statement st = con.createStatement();
 
-				String query = "insert into schooltable values(" + t1.getText() + ", '" + t2.getText() + "', "
-						+ t3.getText() + ")";
-				// System.out.println(query);
-				st.executeUpdate(query); // 24), ('5', 'hhhhh', '7'
-				//
-				// ResultSet rec = st.executeQuery("Select * from schooltable");
-				// System.out.println("------------------------");
-				// while(rec.next()){
-				// System.out.println(rec.getInt(1) + ".." + rec.getString(2) + ".." +
-				// rec.getInt(3));
-				// }
+			String query = "insert into schooltable values(" + t1.getText() + ", '" + t2.getText() + "', "
+					+ t3.getText() + ")";
+			// System.out.println(query);
+			st.executeUpdate(query); // 24), ('5', 'hhhhh', '7'
+			//
+			// ResultSet rec = st.executeQuery("Select * from schooltable");
+			// System.out.println("------------------------");
+			// while(rec.next()){
+			// System.out.println(rec.getInt(1) + ".." + rec.getString(2) + ".." +
+			// rec.getInt(3));
+			// }
 
-			} catch (Exception E) {
-				System.out.println(E.toString());
-			}
+		} catch (Exception E) {
+			System.out.println(E.toString());
+		}
 //		}
 	}
 
