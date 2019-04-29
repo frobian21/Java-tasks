@@ -193,7 +193,6 @@ class Transactions extends KeyAdapter implements ActionListener {
 		transactions.repaint();
 		GroupLayout layout = new GroupLayout(transactions.getContentPane());
 		GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
-		GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
 		GroupLayout.ParallelGroup h1Group = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
 		GroupLayout.ParallelGroup h2Group = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
 		GroupLayout.ParallelGroup h3Group = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
@@ -202,11 +201,10 @@ class Transactions extends KeyAdapter implements ActionListener {
 		layout.setAutoCreateContainerGaps(true);
 
 		layout.setVerticalGroup(vGroup);
-		layout.setHorizontalGroup(hGroup);
+		layout.setHorizontalGroup(layout.createSequentialGroup().addGroup(h1Group).addGroup(h2Group).addGroup(h3Group));
 		vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(accLabel)
 				.addComponent(accNo).addComponent(checkAcc));
 		layout.linkSize(SwingConstants.VERTICAL, accNo, checkAcc);
-		hGroup.addGroup(h1Group).addGroup(h2Group).addGroup(h3Group);
 		h1Group.addComponent(accLabel);
 		h2Group.addComponent(accNo);
 		h3Group.addComponent(checkAcc);
