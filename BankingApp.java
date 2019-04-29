@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class BankingApp {
+public class BankingApp extends WindowAdapter{
 	JFrame win = new JFrame();
 	JMenuBar menuBar = new JMenuBar();
 	JMenu menu1 = new JMenu("Bank");
@@ -14,6 +14,7 @@ public class BankingApp {
 	JMenuItem m2 = new JMenuItem("Deposit Money");
 	JMenuItem m3 = new JMenuItem("Withdraw Money");
 	JMenuItem m4 = new JMenuItem("Check Balance");
+	Transactions transacWindow = new Transactions(win);
 
 	public BankingApp() {
 		menu1.add(m1);
@@ -22,13 +23,17 @@ public class BankingApp {
 		menu1.add(m4);
 		menuBar.add(menu1);
 		win.setJMenuBar(menuBar);
-		win.setSize(400, 400);
+		win.setSize(400, 300);
 		win.setVisible(true);
-		m1.addActionListener(new OpenAccountList());
-		m2.addActionListener(new Transactions());
-		m3.addActionListener(new Transactions());
-		m4.addActionListener(new Transactions());
+		m1.addActionListener(new OpenAccountList(win));
+		m2.addActionListener(transacWindow);
+		m3.addActionListener(transacWindow);
+		m4.addActionListener(transacWindow);
 	}
+//	
+//	public void  windowClosing(WindowEvent e) {
+//		System.exit(0);
+//	}
 
 	public static void main(String[] args) {
 		new BankingApp();
@@ -43,9 +48,19 @@ class OpenAccountList implements ActionListener {
 	JRadioButton savingsButton = new JRadioButton("Savings");
 	JRadioButton maleButton = new JRadioButton("Male");
 	JRadioButton femaleButton = new JRadioButton("Female");
+	JFrame win;
+
+	public OpenAccountList() {
+	}
+
+	public OpenAccountList(JFrame frame) {
+		win = frame;
+	}
 
 	public void actionPerformed(ActionEvent e) {
-		JFrame f = new JFrame();
+		win.getContentPane().removeAll();
+		JPanel f = new JPanel();
+		win.add(f);
 		JLabel nameLabel = new JLabel("Name");
 		JLabel addressLabel = new JLabel("Address");
 		JPanel top = new JPanel();
@@ -72,19 +87,19 @@ class OpenAccountList implements ActionListener {
 		// mid.setLayout(new GridLayout(1, 2));
 		// mid.add(Account);
 		// mid.add(Gender);
-		
-		GroupLayout layout = new GroupLayout(f.getContentPane());
-		f.getContentPane().setLayout(layout);
+
+		GroupLayout layout = new GroupLayout(f);
+		f.setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setVerticalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup().addComponent(nameLabel))
-				.addGroup(layout.createParallelGroup().addComponent(nameText))
-				.addGroup(layout.createParallelGroup().addComponent(addressLabel))
-				.addGroup(layout.createParallelGroup().addComponent(addressText))
-				.addGroup(layout.createParallelGroup().addComponent(Account).addComponent(Gender))
-				.addGroup(layout.createParallelGroup().addComponent(createButton)));
+		layout.setVerticalGroup(
+				layout.createSequentialGroup().addGroup(layout.createParallelGroup().addComponent(nameLabel))
+						.addGroup(layout.createParallelGroup().addComponent(nameText))
+						.addGroup(layout.createParallelGroup().addComponent(addressLabel))
+						.addGroup(layout.createParallelGroup().addComponent(addressText))
+						.addGroup(layout.createParallelGroup().addComponent(Account).addComponent(Gender))
+						.addGroup(layout.createParallelGroup().addComponent(createButton)));
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup().addComponent(nameLabel).addComponent(nameText)
 						.addComponent(addressLabel).addComponent(addressText)
@@ -161,14 +176,15 @@ class OpenAccountList implements ActionListener {
 			}
 		});
 
-		f.pack();
 		f.setVisible(true);
 
 	}
 }
 
 class Transactions extends KeyAdapter implements ActionListener {
-	JFrame transactions = new JFrame();
+	Connection con;
+	JFrame win;
+	JPanel transactions = new JPanel();
 	JLabel accLabel = new JLabel("Accno");
 	JTextField accNo = new JTextField(5);
 	JButton checkAcc = new JButton("...");
@@ -188,15 +204,31 @@ class Transactions extends KeyAdapter implements ActionListener {
 	JButton save = new JButton("Save");
 	int bal, val;
 
+	public Transactions() {
+	}
+
+	public Transactions(JFrame frame) {
+		win = frame;
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://localhost/banking?serverTimezone=BST", "root", "");
+		}
+		catch(Exception E) {
+			System.out.println(E.toString());
+		}
+	}
+
 	public void actionPerformed(ActionEvent e) {
-		transactions.getContentPane().removeAll();
+		win.getContentPane().removeAll();
+		win.add(transactions);
+		// transactions.getContentPane().removeAll(); //for when transactions was frame.
+		transactions.removeAll();
 		transactions.repaint();
-		GroupLayout layout = new GroupLayout(transactions.getContentPane());
+		GroupLayout layout = new GroupLayout(transactions);
 		GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
 		GroupLayout.ParallelGroup h1Group = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
 		GroupLayout.ParallelGroup h2Group = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
 		GroupLayout.ParallelGroup h3Group = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
-		transactions.getContentPane().setLayout(layout);
+		transactions.setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
@@ -225,8 +257,6 @@ class Transactions extends KeyAdapter implements ActionListener {
 				transactions.setSize(400, 110);
 			} else {
 				try {
-					Connection con = DriverManager.getConnection("jdbc:mysql://localhost/banking?serverTimezone=BST",
-							"root", "");
 					Statement st = con.createStatement();
 					ResultSet rs = st
 							.executeQuery("select name, address from bank where accno = '" + accNo.getText() + "'");
@@ -264,7 +294,7 @@ class Transactions extends KeyAdapter implements ActionListener {
 						getBalance();
 						transactions.setSize(400, 300);
 						if (((JButton) e.getSource()).equals(save) && !amount.getText().equals("")) {
-							System.out.println(bal+";"+amount.getText());
+							System.out.println(bal + ";" + amount.getText());
 							if (transac.equals("Withdraw") && bal <= Integer.parseInt(amount.getText())) {
 								JOptionPane.showMessageDialog(null, "Insufficient funds");
 							} else {
@@ -292,19 +322,11 @@ class Transactions extends KeyAdapter implements ActionListener {
 				transac = "Check Balance";
 			} else
 				System.out.println("Error with String comparison");
-
 		}
-		// GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-		// hGroup.addGroup(layout.createParallelGroup().addComponent(nameLabel).addComponent(addressLabel));
-		// hGroup.addGroup(layout.createParallelGroup().addComponent(nameText).addComponent(addressText));
-		// //cant get grouplayout to work
-
 	}
 
 	private void getBalance() {
 		try {
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost/banking?serverTimezone=BST", "root",
-					"");
 			Statement st = con.createStatement();
 			ResultSet rs = st
 					.executeQuery("select ifnull(sum(amount),0) from deposit where accno = '" + accNo.getText() + "'");
@@ -328,7 +350,7 @@ class Transactions extends KeyAdapter implements ActionListener {
 			else
 				val = Integer.parseInt(textField.getText());
 			if (transac.equals("Withdraw")) {
-					newbalance.setText(Integer.toString(bal - val));
+				newbalance.setText(Integer.toString(bal - val));
 			} else
 				newbalance.setText(Integer.toString(bal + val));
 		} catch
@@ -341,5 +363,4 @@ class Transactions extends KeyAdapter implements ActionListener {
 			newbalance.setText("error");
 		}
 	}
-
 }
